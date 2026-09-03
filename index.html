@@ -791,14 +791,14 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
         <input type="text" id="cartName" name="name" placeholder="Ваше имя *" required>
         <input type="text" id="cartPhone" name="phone" placeholder="Телефон или Telegram *" required>
         <textarea id="cartComment" name="comment" rows="2" placeholder="Комментарий"></textarea>
-        <button type="submit" class="cart-submit">Отправить заявку</button>
+        <button type="submit" class="cart-submit">Скачать PDF</button>
       </form>
     </div>
   </div>
   <div class="cart-success" id="cartSuccess">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <h3>Заявка отправлена</h3>
-    <p>Мы свяжемся с вами в ближайшее время для уточнения деталей заказа.</p>
+    <h3>PDF готов</h3>
+    <p>Сохраните файл и отправьте его нам любым удобным способом — по почте, в WhatsApp или Telegram.</p>
   </div>
 </aside>
 
@@ -1008,25 +1008,30 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
       var name = document.getElementById('cartName').value.trim();
       var phone = document.getElementById('cartPhone').value.trim();
       var comment = document.getElementById('cartComment').value.trim();
-      var lines = cart.map(function(item){
-        return '- ' + item.name + ' (' + item.spec + '), кол-во: ' + item.qty;
-      });
       var total = cart.reduce(function(s,i){return s+i.price*i.qty;},0);
-      var bodyLines = [
-        'Новая заявка с сайта DEYE',
-        '',
-        'Имя: ' + name,
-        'Телефон/Telegram: ' + phone,
-        comment ? ('Комментарий: ' + comment) : '',
-        '',
-        'Состав заказа:',
-        lines.join('\n'),
-        '',
-        'Итого: ' + formatPrice(total)
-      ].filter(Boolean).join('\n');
-      var subject = 'Заявка с сайта — ' + name;
-      var mailtoUrl = 'mailto:' + SALES_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyLines);
-      window.location.href = mailtoUrl;
+
+      var printEl = document.getElementById('pdfPrintArea');
+      var rowsHtml = cart.map(function(item){
+        return '<tr>'
+          + '<td>' + item.name + '</td>'
+          + '<td>' + item.spec + '</td>'
+          + '<td style="text-align:center">' + item.qty + '</td>'
+          + '<td style="text-align:right">' + formatPrice(item.price * item.qty) + '</td>'
+          + '</tr>';
+      }).join('');
+      var today = new Date().toLocaleDateString('ru-RU');
+      printEl.innerHTML =
+        '<h1>Заявка — DEYE</h1>'
+        + '<p><b>Дата:</b> ' + today + '</p>'
+        + '<p><b>Имя:</b> ' + name + '</p>'
+        + '<p><b>Телефон/Telegram:</b> ' + phone + '</p>'
+        + (comment ? '<p><b>Комментарий:</b> ' + comment + '</p>' : '')
+        + '<table><thead><tr><th>Товар</th><th>Характеристики</th><th>Кол-во</th><th>Сумма</th></tr></thead><tbody>'
+        + rowsHtml
+        + '</tbody></table>'
+        + '<p class="pdf-total"><b>Итого: ' + formatPrice(total) + '</b></p>';
+
+      window.print();
 
       cartBodyEl.style.display = 'none';
       cartSuccessEl.classList.add('show');
@@ -1103,6 +1108,20 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   });
 })();
 </script>
+<div id="pdfPrintArea" class="pdf-print-area"></div>
+<style>
+  .pdf-print-area{display:none}
+  @media print{
+    body *{visibility:hidden}
+    .pdf-print-area, .pdf-print-area *{visibility:visible}
+    .pdf-print-area{display:block;position:absolute;left:0;top:0;width:100%;padding:24px;font-family:Arial,sans-serif;color:#000}
+    .pdf-print-area h1{font-size:22px;margin:0 0 16px;color:#1c3982}
+    .pdf-print-area p{font-size:13px;margin:4px 0}
+    .pdf-print-area table{width:100%;border-collapse:collapse;margin-top:16px}
+    .pdf-print-area th,.pdf-print-area td{border:1px solid #999;padding:8px;font-size:12px;text-align:left}
+    .pdf-print-area .pdf-total{margin-top:14px;font-size:15px}
+  }
+</style>
 </body>
 
 </html>
