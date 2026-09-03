@@ -822,13 +822,13 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
 <style>
   .cart-overlay{display:none;position:fixed;inset:0;background:rgba(6,8,11,.72);z-index:300}
   .cart-overlay.open{display:block}
-  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15)}
+  .cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15)}
   .cart-panel.open{transform:translateX(0)}
-  #cartBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  #cartBody{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
   .cart-panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee;flex:none}
   .cart-panel-head h2{font-size:18px;font-weight:800;margin:0;font-family:'Montserrat',Arial,sans-serif}
   .cart-close{background:none;border:none;font-size:20px;cursor:pointer;color:#8a8f98;width:32px;height:32px}
-  .cart-items{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 20px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+  .cart-items{padding:12px 20px}
   .cart-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
   .cart-item>div:first-child{min-width:0;flex:1 1 auto}
   .cart-item-name{font-size:13.5px;font-weight:700;margin:0 0 2px;overflow-wrap:break-word}
@@ -838,7 +838,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   .cart-item-remove{background:none;border:none;color:#8a8f98;font-size:12px;text-decoration:underline;cursor:pointer;padding:0;margin-top:6px}
   .cart-item-price{font-size:13px;font-weight:700;white-space:nowrap;flex:none}
   .cart-empty{padding:40px 20px;text-align:center;color:#8a8f98;font-size:14px}
-  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff;box-shadow:0 -4px 14px -8px rgba(0,0,0,.12)}
+  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff;box-shadow:0 -4px 14px -8px rgba(0,0,0,.12);position:sticky;bottom:0;z-index:2}
   .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-bottom:18px}
   .cart-total-row span:last-child{font-size:19px}
   .cart-sum-row{margin-top:-8px}
@@ -876,7 +876,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   <div id="cartBody">
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-empty" id="cartEmpty">Корзина пуста. Добавьте товары из каталога.</div>
-    <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div class="cart-footer" id="cartFooter">
       <div class="cart-total-row"><span>Итого позиций:</span><span id="cartTotal">0</span></div>
       <div class="cart-total-row cart-sum-row"><span>Сумма:</span><span id="cartSum">0 ₽</span></div>
       <form id="cartForm" class="cart-form">
@@ -970,16 +970,18 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   }
 
   function renderCart(){
+    var prevScroll = cartBodyEl.scrollTop;
     cartItemsEl.innerHTML = '';
+    cartFooterEl.style.display = 'block';
     if(cart.length === 0){
       cartEmptyEl.style.display = 'block';
-      cartFooterEl.style.display = 'none';
       updateBadge();
       syncAddButtons();
+      cartTotalEl.textContent = '0';
+      if(cartSumEl) cartSumEl.textContent = formatPrice(0);
       return;
     }
     cartEmptyEl.style.display = 'none';
-    cartFooterEl.style.display = 'block';
 
     var total = 0;
     cart.forEach(function(item, idx){
@@ -1025,6 +1027,8 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
     if(cartSumEl) cartSumEl.textContent = formatPrice(total);
     updateBadge();
     syncAddButtons();
+    cartBodyEl.scrollTop = prevScroll;
+    requestAnimationFrame(function(){ cartBodyEl.scrollTop = prevScroll; });
   }
 
   function addToCart(name, spec, price){
