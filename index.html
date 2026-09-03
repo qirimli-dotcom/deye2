@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GARTZ — бытовая техника</title>
+<title>Deye — солнечные системы</title>
 <!-- ФОТО ГЕРОЯ: поменяй --hero-img на url('your-kitchen.jpg') -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +51,7 @@
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
 
   .burger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;width:42px;height:42px;z-index:60}
-  .cart-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;color:#fff;cursor:pointer;flex:none;margin-left:auto;transition:color .2s ease}
+  .cart-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;color:#fff;cursor:pointer;flex:none;transition:color .2s ease}
   header.solid .cart-btn{color:#1c3982}
   .cart-btn.has-items{color:#1f9d55}
   .cart-btn svg{width:23px;height:23px}
@@ -65,6 +65,7 @@
     .bar{height:44px}
     header.solid .bar{height:44px}
     .logo img{height:40px !important}
+    .cart-btn{margin-left:auto}
     nav{position:fixed;top:44px;left:0;right:0;background:#fff;flex-direction:column;gap:0;margin:0;padding:6px 0;
         box-shadow:0 16px 30px -14px rgba(0,0,0,.3);display:none;border-top:1px solid #eee;max-height:calc(100vh - 44px);overflow:auto}
     nav.open{display:flex}
@@ -822,7 +823,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
 <style>
   .cart-overlay{display:none;position:fixed;inset:0;background:rgba(6,8,11,.72);z-index:300}
   .cart-overlay.open{display:block}
-  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15)}
+  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15);overflow:hidden}
   .cart-panel.open{transform:translateX(0)}
   #cartBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
   .cart-panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee;flex:none}
@@ -838,7 +839,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   .cart-item-remove{background:none;border:none;color:#8a8f98;font-size:12px;text-decoration:underline;cursor:pointer;padding:0;margin-top:6px}
   .cart-item-price{font-size:13px;font-weight:700;white-space:nowrap;flex:none}
   .cart-empty{padding:40px 20px;text-align:center;color:#8a8f98;font-size:14px}
-  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff}
+  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff;position:sticky;bottom:0;z-index:2;box-shadow:0 -4px 14px -8px rgba(0,0,0,.12)}
   .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-bottom:18px}
   .cart-total-row span:last-child{font-size:19px}
   .cart-sum-row{margin-top:-8px}
