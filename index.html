@@ -305,6 +305,8 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
   window.addEventListener('keydown',unlock);
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -1022,7 +1024,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
       var today = new Date().toLocaleDateString('ru-RU');
       printEl.innerHTML =
         '<h1>Заявка — DEYE</h1>'
-        + '<p><b>Дата:</b> ' + today + '</p>'
+        + '<p class="pdf-sub">от ' + today + '</p>'
         + '<p><b>Имя:</b> ' + name + '</p>'
         + '<p><b>Телефон/Telegram:</b> ' + phone + '</p>'
         + (comment ? '<p><b>Комментарий:</b> ' + comment + '</p>' : '')
@@ -1031,13 +1033,36 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
         + '</tbody></table>'
         + '<p class="pdf-total"><b>Итого: ' + formatPrice(total) + '</b></p>';
 
-      window.print();
+      var submitBtn = cartForm.querySelector('.cart-submit');
+      var origText = submitBtn.textContent;
+      submitBtn.textContent = 'Готовим PDF...';
+      submitBtn.disabled = true;
 
-      cartBodyEl.style.display = 'none';
-      cartSuccessEl.classList.add('show');
-      cart = [];
-      saveCart(cart);
-      updateBadge();
+      function finishUp(){
+        submitBtn.textContent = origText;
+        submitBtn.disabled = false;
+        cartBodyEl.style.display = 'none';
+        cartSuccessEl.classList.add('show');
+        cart = [];
+        saveCart(cart);
+        updateBadge();
+      }
+
+      if(window.jspdf && window.jspdf.jsPDF){
+        var doc = new window.jspdf.jsPDF('p','pt','a4');
+        doc.html(printEl, {
+          margin: 20,
+          autoPaging: 'text',
+          html2canvas: { scale: 0.72 },
+          callback: function(doc){
+            doc.save('zayavka-deye-' + Date.now() + '.pdf');
+            finishUp();
+          }
+        });
+      } else {
+        window.print();
+        finishUp();
+      }
       cartForm.reset();
     });
   }
@@ -1110,17 +1135,13 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
 </script>
 <div id="pdfPrintArea" class="pdf-print-area"></div>
 <style>
-  .pdf-print-area{display:none}
-  @media print{
-    body *{visibility:hidden}
-    .pdf-print-area, .pdf-print-area *{visibility:visible}
-    .pdf-print-area{display:block;position:absolute;left:0;top:0;width:100%;padding:24px;font-family:Arial,sans-serif;color:#000}
-    .pdf-print-area h1{font-size:22px;margin:0 0 16px;color:#1c3982}
-    .pdf-print-area p{font-size:13px;margin:4px 0}
-    .pdf-print-area table{width:100%;border-collapse:collapse;margin-top:16px}
-    .pdf-print-area th,.pdf-print-area td{border:1px solid #999;padding:8px;font-size:12px;text-align:left}
-    .pdf-print-area .pdf-total{margin-top:14px;font-size:15px}
-  }
+  .pdf-print-area{position:fixed;left:-9999px;top:0;width:750px;background:#fff;padding:32px;font-family:Arial,sans-serif;color:#000}
+  .pdf-print-area h1{font-size:22px;margin:0 0 4px;color:#1c3982}
+  .pdf-print-area .pdf-sub{font-size:12px;color:#666;margin:0 0 18px}
+  .pdf-print-area p{font-size:13px;margin:4px 0}
+  .pdf-print-area table{width:100%;border-collapse:collapse;margin-top:16px}
+  .pdf-print-area th,.pdf-print-area td{border:1px solid #999;padding:8px;font-size:12px;text-align:left}
+  .pdf-print-area .pdf-total{margin-top:14px;font-size:15px}
 </style>
 </body>
 
