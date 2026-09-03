@@ -53,7 +53,6 @@
   .burger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;width:42px;height:42px;z-index:60}
   .cart-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;color:#fff;cursor:pointer;flex:none;transition:color .2s ease}
   header.solid .cart-btn{color:#1c3982}
-  .cart-btn.has-items{color:#1f9d55}
   .cart-btn svg{width:23px;height:23px}
   .cart-badge{position:absolute;top:0;right:0;background:#c0392b;color:#fff;font-size:11px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
   .burger span{display:block;width:24px;height:2px;background:#fff;border-radius:2px;transition:.2s}
@@ -823,13 +822,13 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
 <style>
   .cart-overlay{display:none;position:fixed;inset:0;background:rgba(6,8,11,.72);z-index:300}
   .cart-overlay.open{display:block}
-  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15);overflow:hidden}
+  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15)}
   .cart-panel.open{transform:translateX(0)}
   #cartBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
   .cart-panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee;flex:none}
   .cart-panel-head h2{font-size:18px;font-weight:800;margin:0;font-family:'Montserrat',Arial,sans-serif}
   .cart-close{background:none;border:none;font-size:20px;cursor:pointer;color:#8a8f98;width:32px;height:32px}
-  .cart-items{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 20px}
+  .cart-items{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 20px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
   .cart-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
   .cart-item>div:first-child{min-width:0;flex:1 1 auto}
   .cart-item-name{font-size:13.5px;font-weight:700;margin:0 0 2px;overflow-wrap:break-word}
@@ -839,7 +838,7 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   .cart-item-remove{background:none;border:none;color:#8a8f98;font-size:12px;text-decoration:underline;cursor:pointer;padding:0;margin-top:6px}
   .cart-item-price{font-size:13px;font-weight:700;white-space:nowrap;flex:none}
   .cart-empty{padding:40px 20px;text-align:center;color:#8a8f98;font-size:14px}
-  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff;position:sticky;bottom:0;z-index:2;box-shadow:0 -4px 14px -8px rgba(0,0,0,.12)}
+  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff;box-shadow:0 -4px 14px -8px rgba(0,0,0,.12)}
   .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-bottom:18px}
   .cart-total-row span:last-child{font-size:19px}
   .cart-sum-row{margin-top:-8px}
@@ -1050,12 +1049,14 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   function openCart(){
     cartOverlay.classList.add('open');
     cartPanel.classList.add('open');
+    document.documentElement.style.overflow = 'hidden';
   }
   function closeCart(){
     cartOverlay.classList.remove('open');
     cartPanel.classList.remove('open');
     cartSuccessEl.classList.remove('show');
     cartBodyEl.style.display = 'block';
+    document.documentElement.style.overflow = '';
   }
 
   if(cartBtn) cartBtn.addEventListener('click', openCart);
