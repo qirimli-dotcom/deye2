@@ -831,7 +831,8 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
     return isNaN(n) ? 0 : n;
   }
   function formatPrice(n){
-    return n.toLocaleString('ru-RU') + ' ₽';
+    var s = Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return s + ' ₽';
   }
 
   var cart = loadCart();
