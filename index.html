@@ -50,7 +50,12 @@
   .scrolld{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:5;opacity:.7;animation:bob 2s infinite}
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
 
-  .burger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto;width:42px;height:42px;z-index:60}
+  .burger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;width:42px;height:42px;z-index:60}
+  .cart-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;color:#fff;cursor:pointer;flex:none;margin-left:auto;transition:color .2s ease}
+  header.solid .cart-btn{color:#1c3982}
+  .cart-btn.has-items{color:#1f9d55}
+  .cart-btn svg{width:23px;height:23px}
+  .cart-badge{position:absolute;top:0;right:0;background:#c0392b;color:#fff;font-size:11px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
   .burger span{display:block;width:24px;height:2px;background:#fff;border-radius:2px;transition:.2s}
   header.solid .burger span{background:#222}
   .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -307,6 +312,10 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
       <a data-to="#catalog">Каталог</a>
       <a data-to="#contacts">Контакты</a>
     </nav>
+    <button class="cart-btn" id="cartBtn" aria-label="Корзина" title="Корзина">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h2l1.6 9.6A2 2 0 0 0 8.57 15.2h8.86a2 2 0 0 0 1.97-1.66L20.5 7.5H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.4" fill="currentColor"/><circle cx="17" cy="19.5" r="1.4" fill="currentColor"/></svg>
+      <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+    </button>
     <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -638,7 +647,7 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
 
 <section class="catalog" id="catalog-storage">
   <div class="wrap">
-    <p class="pcat-sub">Аккумуляторы</p>
+    <p class="pcat-sub" style="white-space:nowrap;font-size:clamp(13px,3vw,19px)">Аккумуляторы и солнечные панели</p>
     <div class="product-grid">
 
       <div class="product-card">
@@ -705,11 +714,6 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
         <button type="button" class="add-cart-btn"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="add-cart-icon"><path d="M3 4h2l1.6 9.6A2 2 0 0 0 8.57 15.2h8.86a2 2 0 0 0 1.97-1.66L20.5 7.5H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.4" fill="currentColor"/><circle cx="17" cy="19.5" r="1.4" fill="currentColor"/></svg><span class="add-cart-text">В корзину</span></button>
       </div>
 
-    </div>
-
-    <p class="pcat-sub" style="margin-top:34px">Солнечные панели</p>
-    <div class="product-grid">
-
       <div class="product-card">
         <div class="product-photo">
           <svg viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -755,7 +759,7 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
       <div class="ccol">
         <div class="cico"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 12l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 1-2z"/></svg></div>
         <div class="clabel">Номер телефона</div>
-        <a class="cval" href="tel:88007707229">8 800 770 72 29</a>
+        <a class="cval" href="tel:+79780979707">+7 978 097-97-07</a>
       </div>
       <div class="cdiv2"></div>
       <div class="ccol">
@@ -771,7 +775,7 @@ if('scrollRestoration' in history){history.scrollRestoration='manual';}
       <div class="ccol">
         <div class="cico"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
         <div class="clabel">Email</div>
-        <a class="cval" href="mailto:info@gartz.ru">info@gartz.ru</a>
+        <a class="cval" href="mailto:info@itc-ltd.ru">info@itc-ltd.ru</a>
       </div>
     </div>
   </div>
@@ -812,6 +816,302 @@ document.querySelectorAll('header nav a[data-to]').forEach(function(a){
   if(!b||!n)return;
   b.addEventListener('click',function(){n.classList.toggle('open');b.classList.toggle('open');});
   n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');b.classList.remove('open');});});
+})();
+</script>
+
+<style>
+  .cart-overlay{display:none;position:fixed;inset:0;background:rgba(6,8,11,.72);z-index:300}
+  .cart-overlay.open{display:block}
+  .cart-panel{position:fixed;top:0;right:0;height:100vh;height:100svh;width:min(400px,100%);background:#fff;color:#1a1a1a;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 32px rgba(0,0,0,.15)}
+  .cart-panel.open{transform:translateX(0)}
+  #cartBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  .cart-panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #eee;flex:none}
+  .cart-panel-head h2{font-size:18px;font-weight:800;margin:0;font-family:'Montserrat',Arial,sans-serif}
+  .cart-close{background:none;border:none;font-size:20px;cursor:pointer;color:#8a8f98;width:32px;height:32px}
+  .cart-items{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 20px}
+  .cart-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
+  .cart-item>div:first-child{min-width:0;flex:1 1 auto}
+  .cart-item-name{font-size:13.5px;font-weight:700;margin:0 0 2px;overflow-wrap:break-word}
+  .cart-item-spec{font-size:12px;color:#7a7a7a;margin:0 0 8px;overflow-wrap:break-word}
+  .cart-item-qty{display:flex;align-items:center;gap:8px}
+  .cart-qty-btn{width:26px;height:26px;border:1px solid #e5e5e5;background:#fff;border-radius:5px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .cart-item-remove{background:none;border:none;color:#8a8f98;font-size:12px;text-decoration:underline;cursor:pointer;padding:0;margin-top:6px}
+  .cart-item-price{font-size:13px;font-weight:700;white-space:nowrap;flex:none}
+  .cart-empty{padding:40px 20px;text-align:center;color:#8a8f98;font-size:14px}
+  .cart-footer{flex:none;border-top:1px solid #eee;padding:18px 20px calc(22px + env(safe-area-inset-bottom,0px));background:#fff}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-bottom:18px}
+  .cart-total-row span:last-child{font-size:19px}
+  .cart-sum-row{margin-top:-8px}
+  .cart-sum-row span:last-child{color:#1c3982}
+  .cart-form input,.cart-form textarea{width:100%;padding:13px 15px;border:1.5px solid #e5e5e5;border-radius:9px;font-size:14.5px;font-family:inherit;margin-bottom:12px;transition:border-color .15s ease,box-shadow .15s ease}
+  .cart-form input:focus,.cart-form textarea:focus{outline:none;border-color:#1c3982;box-shadow:0 0 0 3px rgba(28,57,130,.12)}
+  .cart-form textarea{resize:vertical;min-height:60px}
+  .cart-submit{width:100%;display:block;background:#1c3982;color:#fff;border:none;padding:15px 14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;font-family:inherit}
+  .cart-submit:hover{background:#132a63}
+  .cart-success{display:none;padding:30px 20px;text-align:center}
+  .cart-success.show{display:block}
+  .cart-success svg{width:48px;height:48px;color:#1f9d55;margin-bottom:12px}
+  .cart-success h3{font-size:16px;margin:0 0 8px;font-family:'Montserrat',Arial,sans-serif}
+  .cart-success p{font-size:13.5px;color:#8a8f98;margin:0}
+  @media(max-width:640px){
+    .cart-panel-head{padding:12px 16px}
+    .cart-panel-head h2{font-size:16px}
+    .cart-items{padding:8px 16px}
+    .cart-item{padding:8px 0}
+    .cart-footer{padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+    .cart-total-row{font-size:14px;margin-bottom:8px}
+    .cart-total-row span:last-child{font-size:16px}
+    .cart-form input,.cart-form textarea{padding:11px 13px;font-size:14px;margin-bottom:9px}
+    .cart-form textarea{min-height:50px}
+    .cart-submit{padding:13px 14px;font-size:14.5px}
+  }
+</style>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-panel" id="cartPanel" aria-label="Корзина">
+  <div class="cart-panel-head">
+    <h2>Корзина</h2>
+    <button type="button" class="cart-close" id="cartClose" aria-label="Закрыть">✕</button>
+  </div>
+  <div id="cartBody">
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-empty" id="cartEmpty">Корзина пуста. Добавьте товары из каталога.</div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total-row"><span>Итого позиций:</span><span id="cartTotal">0</span></div>
+      <div class="cart-total-row cart-sum-row"><span>Сумма:</span><span id="cartSum">0 ₽</span></div>
+      <form id="cartForm" class="cart-form">
+        <input type="text" id="cartName" name="name" placeholder="Ваше имя *" required>
+        <input type="text" id="cartPhone" name="phone" placeholder="Телефон или Telegram *" required>
+        <textarea id="cartComment" name="comment" rows="2" placeholder="Комментарий"></textarea>
+        <button type="submit" class="cart-submit">Отправить заявку</button>
+      </form>
+    </div>
+  </div>
+  <div class="cart-success" id="cartSuccess">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h3>Заявка отправлена</h3>
+    <p>Мы свяжемся с вами в ближайшее время для уточнения деталей заказа.</p>
+  </div>
+</aside>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'deye_cart_gartz_v1';
+  var SALES_EMAIL = 'info@itc-ltd.ru';
+
+  function loadCart(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      var parsed = raw ? JSON.parse(raw) : [];
+      if(!Array.isArray(parsed)) return [];
+      return parsed.filter(function(item){
+        return item && typeof item.name === 'string' && item.name.trim() !== ''
+          && typeof item.price === 'number' && !isNaN(item.price)
+          && typeof item.qty === 'number' && item.qty > 0;
+      });
+    }catch(e){ return []; }
+  }
+  function saveCart(cart){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); }catch(e){}
+  }
+  function parsePrice(text){
+    var digits = (text||'0').replace(/[^\d]/g,'');
+    var n = parseInt(digits,10);
+    return isNaN(n) ? 0 : n;
+  }
+  function formatPrice(n){
+    return n.toLocaleString('ru-RU') + ' ₽';
+  }
+
+  var cart = loadCart();
+
+  var cartBtn = document.getElementById('cartBtn');
+  var cartBadge = document.getElementById('cartBadge');
+  var cartOverlay = document.getElementById('cartOverlay');
+  var cartPanel = document.getElementById('cartPanel');
+  var cartClose = document.getElementById('cartClose');
+  var cartItemsEl = document.getElementById('cartItems');
+  var cartEmptyEl = document.getElementById('cartEmpty');
+  var cartFooterEl = document.getElementById('cartFooter');
+  var cartTotalEl = document.getElementById('cartTotal');
+  var cartSumEl = document.getElementById('cartSum');
+  var cartForm = document.getElementById('cartForm');
+  var cartSuccessEl = document.getElementById('cartSuccess');
+  var cartBodyEl = document.getElementById('cartBody');
+
+  function updateBadge(){
+    var count = cart.reduce(function(s,i){return s+i.qty;},0);
+    if(count>0){
+      cartBadge.textContent = count;
+      cartBadge.style.display = 'flex';
+      cartBtn.classList.add('has-items');
+    } else {
+      cartBadge.style.display = 'none';
+      cartBtn.classList.remove('has-items');
+    }
+  }
+
+  function syncAddButtons(){
+    document.querySelectorAll('.add-cart-btn').forEach(function(btn){
+      var card = btn.closest('.product-card');
+      if(!card) return;
+      var nameEl = card.querySelector('.product-name');
+      var name = nameEl ? nameEl.textContent.trim() : '';
+      var inCart = cart.some(function(i){ return i.name === name; });
+      var textSpan = btn.querySelector('.add-cart-text');
+      if(inCart){
+        btn.classList.add('is-added');
+        if(textSpan) textSpan.textContent = 'Добавлено ✓';
+      } else {
+        btn.classList.remove('is-added');
+        if(textSpan) textSpan.textContent = 'В корзину';
+      }
+    });
+  }
+
+  function renderCart(){
+    cartItemsEl.innerHTML = '';
+    if(cart.length === 0){
+      cartEmptyEl.style.display = 'block';
+      cartFooterEl.style.display = 'none';
+      updateBadge();
+      syncAddButtons();
+      return;
+    }
+    cartEmptyEl.style.display = 'none';
+    cartFooterEl.style.display = 'block';
+
+    var total = 0;
+    cart.forEach(function(item, idx){
+      total += item.price * item.qty;
+      var row = document.createElement('div');
+      row.className = 'cart-item';
+
+      var info = document.createElement('div');
+      var nameEl = document.createElement('p');
+      nameEl.className = 'cart-item-name';
+      nameEl.textContent = item.name;
+      var specEl = document.createElement('p');
+      specEl.className = 'cart-item-spec';
+      specEl.textContent = item.spec;
+
+      var qtyRow = document.createElement('div');
+      qtyRow.className = 'cart-item-qty';
+      var minusBtn = document.createElement('button');
+      minusBtn.type = 'button'; minusBtn.className = 'cart-qty-btn'; minusBtn.textContent = '−';
+      minusBtn.addEventListener('click', function(){ changeQty(idx,-1); });
+      var qtyText = document.createElement('span'); qtyText.textContent = item.qty;
+      var plusBtn = document.createElement('button');
+      plusBtn.type = 'button'; plusBtn.className = 'cart-qty-btn'; plusBtn.textContent = '+';
+      plusBtn.addEventListener('click', function(){ changeQty(idx,1); });
+      qtyRow.appendChild(minusBtn); qtyRow.appendChild(qtyText); qtyRow.appendChild(plusBtn);
+
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'cart-item-remove'; removeBtn.textContent = 'Удалить';
+      removeBtn.addEventListener('click', function(){ removeItem(idx); });
+
+      info.appendChild(nameEl); info.appendChild(specEl); info.appendChild(qtyRow); info.appendChild(removeBtn);
+
+      var priceEl = document.createElement('div');
+      priceEl.className = 'cart-item-price';
+      priceEl.textContent = formatPrice(item.price * item.qty);
+
+      row.appendChild(info); row.appendChild(priceEl);
+      cartItemsEl.appendChild(row);
+    });
+
+    var itemsCount = cart.reduce(function(s,i){return s+i.qty;},0);
+    cartTotalEl.textContent = itemsCount;
+    if(cartSumEl) cartSumEl.textContent = formatPrice(total);
+    updateBadge();
+    syncAddButtons();
+  }
+
+  function addToCart(name, spec, price){
+    var existing = cart.find(function(i){ return i.name === name; });
+    if(existing){ existing.qty += 1; } else { cart.push({name:name,spec:spec,price:price,qty:1}); }
+    saveCart(cart);
+    renderCart();
+  }
+  function changeQty(idx, delta){
+    if(!cart[idx]) return;
+    cart[idx].qty += delta;
+    if(cart[idx].qty <= 0) cart.splice(idx,1);
+    saveCart(cart);
+    renderCart();
+  }
+  function removeItem(idx){
+    cart.splice(idx,1);
+    saveCart(cart);
+    renderCart();
+  }
+
+  function openCart(){
+    cartOverlay.classList.add('open');
+    cartPanel.classList.add('open');
+  }
+  function closeCart(){
+    cartOverlay.classList.remove('open');
+    cartPanel.classList.remove('open');
+    cartSuccessEl.classList.remove('show');
+    cartBodyEl.style.display = 'block';
+  }
+
+  if(cartBtn) cartBtn.addEventListener('click', openCart);
+  if(cartClose) cartClose.addEventListener('click', closeCart);
+  if(cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+  document.querySelectorAll('.add-cart-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.product-card');
+      if(!card) return;
+      var nameEl = card.querySelector('.product-name');
+      var specEl = card.querySelector('.product-spec');
+      var priceEl = card.querySelector('.product-price');
+      var name = nameEl ? nameEl.textContent.trim() : '';
+      var spec = specEl ? specEl.textContent.trim() : '';
+      var price = priceEl ? parsePrice(priceEl.textContent) : 0;
+      addToCart(name, spec, price);
+    });
+  });
+
+  if(cartForm){
+    cartForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(cart.length === 0) return;
+      var name = document.getElementById('cartName').value.trim();
+      var phone = document.getElementById('cartPhone').value.trim();
+      var comment = document.getElementById('cartComment').value.trim();
+      var lines = cart.map(function(item){
+        return '- ' + item.name + ' (' + item.spec + '), кол-во: ' + item.qty;
+      });
+      var total = cart.reduce(function(s,i){return s+i.price*i.qty;},0);
+      var bodyLines = [
+        'Новая заявка с сайта DEYE',
+        '',
+        'Имя: ' + name,
+        'Телефон/Telegram: ' + phone,
+        comment ? ('Комментарий: ' + comment) : '',
+        '',
+        'Состав заказа:',
+        lines.join('\n'),
+        '',
+        'Итого: ' + formatPrice(total)
+      ].filter(Boolean).join('\n');
+      var subject = 'Заявка с сайта — ' + name;
+      var mailtoUrl = 'mailto:' + SALES_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyLines);
+      window.location.href = mailtoUrl;
+
+      cartBodyEl.style.display = 'none';
+      cartSuccessEl.classList.add('show');
+      cart = [];
+      saveCart(cart);
+      updateBadge();
+      cartForm.reset();
+    });
+  }
+
+  renderCart();
 })();
 </script>
 </body>
